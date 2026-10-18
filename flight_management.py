@@ -1,26 +1,8 @@
-"""
-Flight Management Database Application
-======================================
-CM500292 - Databases Coursework
-
-A command-line interface (CLI) that connects to a SQLite database and
-allows airline staff to manage FLIGHTS, PILOTS and DESTINATIONS.
-
-The schema (three related tables) is created automatically on first run
-and is pre-populated with sample data (12 destinations, 12 pilots,
-15 flights) so the application can be demonstrated immediately.
-"""
 
 import sqlite3
 
 DB_NAME = "flight_management.db"
 
-# ---------------------------------------------------------------------------
-# 1. SCHEMA - SQL statements that create the three tables
-# ---------------------------------------------------------------------------
-# A flight MUST belong to exactly one destination (DestinationID is a
-# mandatory foreign key). A flight MAY have one pilot assigned (PilotID
-# is optional - NULL means "pilot not assigned yet").
 
 SQL_CREATE_DESTINATIONS = (
     "CREATE TABLE IF NOT EXISTS Destinations ("
@@ -59,11 +41,6 @@ SCHEMA_STATEMENTS = [
     SQL_CREATE_FLIGHTS,
 ]
 
-# ---------------------------------------------------------------------------
-# 2. INSERT statements (parameterised with ? placeholders to avoid SQL
-#    injection and syntax errors with user input)
-# ---------------------------------------------------------------------------
-
 SQL_INSERT_DESTINATION = (
     "INSERT INTO Destinations (City, Country, AirportCode) VALUES (?, ?, ?)"
 )
@@ -77,13 +54,6 @@ SQL_INSERT_FLIGHT = (
     "VALUES (?, ?, ?, ?, ?, ?, ?)"
 )
 
-# ---------------------------------------------------------------------------
-# 3. SELECT queries
-# ---------------------------------------------------------------------------
-
-# "Base" query used whenever flight details are displayed: joins Flights to
-# Destinations (so the city/airport is shown instead of a bare ID) and
-# LEFT JOINs Pilots (a flight may have no pilot yet, so LEFT not INNER).
 SQL_FLIGHT_DETAILS = (
     "SELECT f.FlightID, f.FlightNumber, f.Origin, "
     "d.City || ' (' || d.AirportCode || ')' AS Destination, "
@@ -115,7 +85,7 @@ SQL_SELECT_ALL_PILOTS = (
     "LicenseNumber, HoursFlown FROM Pilots ORDER BY LastName"
 )
 
-# Pilot schedule: all flights assigned to one pilot, with destination names
+# Pilot schedule
 SQL_PILOT_SCHEDULE = (
     "SELECT f.FlightNumber, f.Origin, d.City AS Destination, "
     "f.DepartureDateTime, f.Status "
@@ -167,7 +137,7 @@ SQL_FIND_FLIGHT = "SELECT COUNT(*) FROM Flights WHERE FlightID = ?"
 SQL_FIND_PILOT = "SELECT COUNT(*) FROM Pilots WHERE PilotID = ?"
 
 # ---------------------------------------------------------------------------
-# 5. SAMPLE DATA - used to populate the tables for testing/demonstration
+# 5. SAMPLE DATA (from OpenAI) used to populate the tables for testing
 # ---------------------------------------------------------------------------
 
 SAMPLE_DESTINATIONS = [
@@ -341,7 +311,7 @@ def add_flight(conn):
 
 
 # ---------------------------------------------------------------------------
-# Menu option 2: View flights (all, or by destination / status / date)
+# Menu option 2: View flights
 # ---------------------------------------------------------------------------
 
 def view_flights_menu(conn):
@@ -514,7 +484,7 @@ def destinations_menu(conn):
 
 
 # ---------------------------------------------------------------------------
-# Menu option 7: Summary reports (aggregations)
+# Menu option 7: Summary reports
 # ---------------------------------------------------------------------------
 
 def summary_reports(conn):
